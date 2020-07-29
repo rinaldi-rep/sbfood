@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import br.com.softblue.bluefood.application.service.ImageServices;
+import br.com.softblue.bluefood.application.service.ImageService;
 
 @Controller
 public class ImageController {
 	
 	@Autowired
-	private ImageServices imageServices;
+	private ImageService imageServices;
 
 	@GetMapping(path = "/images/{type}/{imgName}", produces = MediaType.IMAGE_PNG_VALUE)
 	@ResponseBody

@@ -78,6 +78,15 @@ public class Carrinho implements Serializable {
 		
 		return soma;
 	}
+	
+	public void limpar() {
+		itens.clear();
+		restaurante = null;
+	}
+	
+	public boolean vazio() {
+		return itens.size() == 0;
+	}
 }
 
 

@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 
 import br.com.softblue.bluefood.domain.pedido.Carrinho;
 import br.com.softblue.bluefood.domain.pedido.RestauranteDiferenteException;
 import br.com.softblue.bluefood.domain.restaurante.ItemCardapio;
 import br.com.softblue.bluefood.domain.restaurante.ItemCardapioRepository;
+import lombok.Getter;
 
 @Controller
 @RequestMapping("/cliente/carrinho")
@@ -25,6 +27,11 @@ public class CarrinhoController {
 	@ModelAttribute("carrinho")
 	public Carrinho carrinho() {
 		return new Carrinho();
+	}
+	
+	@GetMapping(path="/visualizar")
+	public String viewCarrinho() {
+		return "cliente-carrinho";
 	}
 
 	@GetMapping(path = "/adicionar")
@@ -43,4 +50,22 @@ public class CarrinhoController {
 
 		return "cliente-carrinho";
 	}
+	
+	@GetMapping(path = "/remover")
+	public String removerItem(@RequestParam("itemId") Integer itemId, 
+			                  @ModelAttribute("carrinho") Carrinho carrinho,
+			                  SessionStatus sessionStatus,
+			                  Model model) {
+		ItemCardapio itemCardapio = itemCardapioRepository.findById(itemId).orElseThrow();
+		
+		carrinho.removeItem(itemCardapio);
+		
+		if (carrinho.vazio()) {
+			sessionStatus.setComplete();
+		}
+		
+		return "cliente-carrinho";
+	}
+	
+	
 }

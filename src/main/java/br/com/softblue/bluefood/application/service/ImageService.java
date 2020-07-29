@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import br.com.softblue.bluefood.util.IOUtils;
 
 @Service
-public class ImageServices {
+public class ImageService {
 
 	@Value("${bluefood.files.logotipo}")
 	private String logotiposDir;

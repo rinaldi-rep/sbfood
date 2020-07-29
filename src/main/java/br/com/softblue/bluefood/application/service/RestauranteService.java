@@ -26,7 +26,7 @@ public class RestauranteService {
 	private ClienteRepository clienteRepository;
 
 	@Autowired
-	private ImageServices imageServices;
+	private ImageService imageServices;
 	
 	@Transactional
 	public void saveRestaurante(Restaurante restaurante) throws ValidationException {
