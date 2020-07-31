@@ -8,7 +8,7 @@
 			<div>
 				<h1>SEU PEDIDO</h1>
 				<br />
-				<input type="button" value="Refazer Pedido" />
+				<input type="button" value="Refazer Pedido" th:onclick="'location.href=\'' + @{/cliente/carrinho/refazerCarrinho} + '?pedidoId=' + ${pedido.id} + '\';'" />
 			</div>
 			<br /><br />
 			

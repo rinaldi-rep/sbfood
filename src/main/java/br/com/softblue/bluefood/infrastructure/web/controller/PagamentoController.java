@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
+import br.com.softblue.bluefood.application.service.PagamentoException;
 import br.com.softblue.bluefood.application.service.PedidoService;
 import br.com.softblue.bluefood.domain.pedido.Carrinho;
 import br.com.softblue.bluefood.domain.pedido.Pedido;
@@ -18,18 +19,22 @@ import br.com.softblue.bluefood.domain.pedido.Pedido;
 @RequestMapping("/cliente/pagamento")
 @SessionAttributes("carrinho")
 public class PagamentoController {
-	
+
 	@Autowired
 	private PedidoService pedidoService;
 
 	@PostMapping(path = "/pagar")
-	public String pagar(@RequestParam("numCartao") String numCartao,
-					    @ModelAttribute("carrinho") Carrinho carrinho,
-					    SessionStatus sessionStatus,
-					    Model model) {
-		Pedido pedido = pedidoService.criarEPagar(carrinho, numCartao);
-		sessionStatus.setComplete();
-		
-		return "redirect:/cliente/pedido/view?pedidoId=" + pedido.getId();
+	public String pagar(@RequestParam("numCartao") String numCartao, @ModelAttribute("carrinho") Carrinho carrinho,
+			SessionStatus sessionStatus, Model model) {
+
+		try {
+			Pedido pedido = pedidoService.criarEPagar(carrinho, numCartao);
+			sessionStatus.setComplete();
+			return "redirect:/cliente/pedido/view?pedidoId=" + pedido.getId();
+			
+		} catch (PagamentoException e) {
+			model.addAttribute("msg", e.getMessage());
+			return "cliente-carrinho";
+		}
 	}
 }
