@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
 
+	public List<Pedido> findByRestaurante_IdOrderByDataDesc(Integer restauranteId);
+	
 	// Duas opções de uma mesma funconalidade --------------------------
 	//public List<Pedido> findByCliente_IdOrderByDataDesc(Integer clienteId);
 	

@@ -21,12 +21,20 @@ public class ImageService {
 	@Value("${bluefood.files.comida}")
 	private String comidasDir;
 
-	public void uploadLogotipo(MultipartFile multipartFile, String fileName) {
+	private void fileUpload(MultipartFile multipartFile, String fileName, String path) {
 		try {
-			IOUtils.copy(multipartFile.getInputStream(), fileName, logotiposDir);
+			IOUtils.copy(multipartFile.getInputStream(), fileName, path);
 		} catch (IOException e) {
 			throw new ApplicationServiceException(e);
 		}
+	}
+
+	public void uploadLogotipo(MultipartFile multipartFile, String fileName) {
+		fileUpload(multipartFile, fileName, logotiposDir);
+	}
+	
+	public void uploadComida(MultipartFile multipartFile, String fileName) {
+		fileUpload(multipartFile, fileName, comidasDir);
 	}
 	
 	public byte[] getBytes(String type, String imgName) {

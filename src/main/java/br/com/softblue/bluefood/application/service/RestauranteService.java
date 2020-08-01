@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softblue.bluefood.domain.cliente.Cliente;
 import br.com.softblue.bluefood.domain.cliente.ClienteRepository;
+import br.com.softblue.bluefood.domain.restaurante.ItemCardapio;
+import br.com.softblue.bluefood.domain.restaurante.ItemCardapioRepository;
 import br.com.softblue.bluefood.domain.restaurante.Restaurante;
 import br.com.softblue.bluefood.domain.restaurante.RestauranteComparator;
 import br.com.softblue.bluefood.domain.restaurante.RestauranteRepository;
@@ -24,9 +26,12 @@ public class RestauranteService {
 	
 	@Autowired
 	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private ItemCardapioRepository itemCardapioRepository;
 
 	@Autowired
-	private ImageService imageServices;
+	private ImageService imageService;
 	
 	@Transactional
 	public void saveRestaurante(Restaurante restaurante) throws ValidationException {
@@ -39,7 +44,7 @@ public class RestauranteService {
 			restaurante.encryptPassword();
 			restaurante = restauranteRepository.save(restaurante);
 			restaurante.setLogotipoFileName();
-			imageServices.uploadLogotipo(restaurante.getLogotipoFile(), restaurante.getLogotipo());
+			imageService.uploadLogotipo(restaurante.getLogotipoFile(), restaurante.getLogotipo());
 
 		} else {
 			Restaurante restauranteDB = restauranteRepository.findById(restaurante.getId()).orElseThrow();
@@ -98,4 +103,37 @@ public class RestauranteService {
 		
 		return restaurantes;
 	}
+	
+	@Transactional
+	public void saveItemCardapio(ItemCardapio itemCardapio) {
+		itemCardapio = itemCardapioRepository.save(itemCardapio);
+		itemCardapio.setImagemFileName();
+		imageService.uploadComida(itemCardapio.getImagemFile(), itemCardapio.getImagem());
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

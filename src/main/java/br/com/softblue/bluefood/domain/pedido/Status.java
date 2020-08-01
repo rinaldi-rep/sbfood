@@ -3,7 +3,7 @@ package br.com.softblue.bluefood.domain.pedido;
 public enum Status {
 	Producao(1, "Em Produção", false), 
 	Entrega(2, "Saiu para Entrega", false), 
-	Concluido(1, "Concluído", true);
+	Concluido(3, "Concluído", true);
 
 	private Status(int ordem, String descricao, boolean ultimo) {
 		this.ordem = ordem;
@@ -25,5 +25,14 @@ public enum Status {
 	
 	public boolean isUltimo() {
 		return ultimo;
+	}
+
+	public static Status fromOrdem(int ordem) {
+		for (Status status : Status.values()) {
+			if (status.getOrdem() == ordem) {
+				return status;
+			}
+		}
+		return null;
 	}
 }

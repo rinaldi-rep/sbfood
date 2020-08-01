@@ -69,4 +69,13 @@ public class Pedido implements Serializable {
 	public String getFormattedId() {
 		return String.format("#%04d", id);
 	}
+	
+	public void definirProximoStatus() {
+		int ordem = status.getOrdem();
+		Status newStatus = Status.fromOrdem(ordem + 1);
+		
+		if (newStatus != null) {
+			status = newStatus;
+		}
+	}
 }
