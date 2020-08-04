@@ -14,10 +14,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import br.com.softblue.bluefood.application.service.RelatorioService;
 import br.com.softblue.bluefood.application.service.RestauranteService;
 import br.com.softblue.bluefood.application.service.ValidationException;
 import br.com.softblue.bluefood.domain.pedido.Pedido;
 import br.com.softblue.bluefood.domain.pedido.PedidoRepository;
+import br.com.softblue.bluefood.domain.pedido.RelatorioItemFaturamento;
+import br.com.softblue.bluefood.domain.pedido.RelatorioItemFilter;
+import br.com.softblue.bluefood.domain.pedido.RelatorioPedidoFilter;
 import br.com.softblue.bluefood.domain.restaurante.CategoriaRestauranteRepository;
 import br.com.softblue.bluefood.domain.restaurante.ItemCardapio;
 import br.com.softblue.bluefood.domain.restaurante.ItemCardapioRepository;
@@ -43,6 +47,9 @@ public class RestauranteController {
 	
 	@Autowired
 	private RestauranteService restauranteService;
+	
+	@Autowired
+	private RelatorioService relatorioService;
 	
 	@GetMapping(path = "/home")
 	public String home(Model model) {
@@ -127,6 +134,28 @@ public class RestauranteController {
 		return "restaurante-pedido";
 	}
 	
+	@GetMapping(path = "/relatorio/pedidos")
+	public String relatorioPedidos(@ModelAttribute("relatorioPedidoFilter") RelatorioPedidoFilter filter, Model model) {	
+		Integer restauranteId =  SecurityUtils.loggedRestaurante().getId();
+		List<Pedido> pedidos = relatorioService.listPedidos(restauranteId, filter);
+		model.addAttribute("pedidos", pedidos);
+		model.addAttribute("filter", filter);
+		
+		return "restaurante-relatorio-pedidos";
+	}
+	
+	@GetMapping(path = "/relatorio/itens")
+	public String relatorioItens(@ModelAttribute("relatorioItemFilter") RelatorioItemFilter filter, Model model) {	
+		Integer restauranteId =  SecurityUtils.loggedRestaurante().getId();
+		List<ItemCardapio> itensCardapio = itemCardapioRepository.findByRestaurante_IdOrderByNome(restauranteId);
+		List<RelatorioItemFaturamento> itensCalculados = relatorioService.calcularFaturamentoItens(restauranteId, filter);
+		model.addAttribute("itensCardapio", itensCardapio);		
+		model.addAttribute("itensCalculados", itensCalculados);
+		model.addAttribute("filter", filter);
+		
+		return "restaurante-relatorio-itens";
+	}
+	
 	private void paginaComidaBuilder(Model model) {
 		Integer restauranteId =  SecurityUtils.loggedRestaurante().getId();
 		Restaurante restaurante = restauranteRepository.findById(restauranteId).orElseThrow();
@@ -136,13 +165,3 @@ public class RestauranteController {
 		model.addAttribute("itensCardapio", itensCardapio);
 	}
 }
-
-
-
-
-
-
-
-
-
-
